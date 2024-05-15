@@ -40,7 +40,7 @@ def text_to_speech(text):
     tts = gTTS(text=text, lang=lang, slow=False)
     current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     file_name = f"{current_time}.mp3"
-    file_path = os.path.join("output_audios", file_name)
+    file_path = os.path.join("output_audios", file_name).replace('\\', '/')
     tts.save(file_path)  # Save the generated audio with timestamped filename
     return file_path
 
@@ -56,9 +56,10 @@ translator = Translator()
 # audio_file = text_to_speech(translated_text)
 # playsound(audio_file)  # Play the generated audio
 app.mount("/output_audios", StaticFiles(directory="output_audios"), name="output_audios")
-@app.get("/audio_translate/")
-def convertt(english_text: str,
-             target_language: str):
+@app.post("/audio_translate/")
+def convertt(data: dict):
+    english_text = data.get("english_text")
+    target_language = data.get("target_language")
     translated_text = translator.translate(english_text, src='en', dest=target_language).text
     audio_file = text_to_speech(translated_text)
     return audio_file
