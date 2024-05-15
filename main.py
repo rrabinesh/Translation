@@ -24,8 +24,7 @@
 # play(audio)
 
 import os
-from gtts import gTTS
-from playsound import playsound  # For playing the audio
+from gtts import gTTS 
 from googletrans import Translator
 from fastapi import FastAPI
 from datetime import datetime
